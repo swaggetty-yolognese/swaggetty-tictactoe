@@ -3,20 +3,19 @@ package api
 import java.util.UUID
 
 import akka.NotUsed
-import akka.actor.{Actor, ActorRef, ActorSystem, Props}
+import akka.actor.{ Actor, ActorRef, ActorSystem, Props }
 import akka.http.scaladsl.model.headers.HttpCookie
-import akka.http.scaladsl.model.ws.{BinaryMessage, Message, TextMessage}
+import akka.http.scaladsl.model.ws.{ BinaryMessage, Message, TextMessage }
 import akka.http.scaladsl.server.Directives._
-import akka.http.scaladsl.server.{Directive1, Route}
-import akka.stream.scaladsl.{BroadcastHub, Flow, Keep, Sink, Source}
-import example.LobbyActor.{AddRoom, EchoWs, LobbyUpdate}
+import akka.http.scaladsl.server.{ Directive1, Route }
+import akka.stream.scaladsl.{ BroadcastHub, Flow, Keep, Sink, Source }
+import example.LobbyActor.{ AddRoom, EchoWs, LobbyUpdate }
 import util.JsonSupport
 import akka.pattern._
-import akka.stream.{ActorMaterializer, OverflowStrategy}
+import akka.stream.{ ActorMaterializer, OverflowStrategy }
 import com.typesafe.scalalogging.LazyLogging
 
 import scala.util.Try
-
 
 trait LobbyApi extends JsonSupport with LazyLogging {
 
@@ -55,8 +54,8 @@ trait LobbyApi extends JsonSupport with LazyLogging {
 
       def receive: Receive = {
         // INTERNAL -> SOCKET
-        case u@LobbyUpdate(date, rooms) => flowInput.offer(serialization.write(u))
-        case EchoWs(msg) => flowInput.offer(msg)
+        case u @ LobbyUpdate(date, rooms) => flowInput.offer(serialization.write(u))
+        case EchoWs(msg)                  => flowInput.offer(msg)
 
         // SOCKET -> INTERNAL
         case TextMessage.Strict(msg) =>
@@ -66,7 +65,7 @@ trait LobbyApi extends JsonSupport with LazyLogging {
     }))
 
     Flow[Message]
-      .mapConcat{ m => socketActor ! m ; Nil } // send and forget to the actor the incoming data
+      .mapConcat { m => socketActor ! m; Nil } // send and forget to the actor the incoming data
       .merge(flowOutput) // Stream the data we want to the client
       .map(TextMessage.apply)
 

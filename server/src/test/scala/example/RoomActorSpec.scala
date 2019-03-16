@@ -27,9 +27,9 @@ class RoomActorSpec extends Specification {
       val emptyBoard = Board.emptyTicTacToeBoard()
 
       val boardWithTris = emptyBoard
-        .set(BoardCoordinate(0,0), PLAYER1.marker)
-        .set(BoardCoordinate(0,1), PLAYER1.marker)
-        .set(BoardCoordinate(0,2), PLAYER1.marker)
+        .set(BoardCoordinate(0, 0), PLAYER1.marker)
+        .set(BoardCoordinate(0, 1), PLAYER1.marker)
+        .set(BoardCoordinate(0, 2), PLAYER1.marker)
 
       hasTicTacToe(boardWithTris, PLAYER1) === true
       hasTicTacToe(emptyBoard, PLAYER1) === false

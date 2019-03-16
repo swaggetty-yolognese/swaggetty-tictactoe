@@ -3,14 +3,14 @@ package example
 import java.time.LocalDateTime
 import java.util.UUID
 
-import akka.actor.{Actor, ActorLogging, ActorRef, Props}
+import akka.actor.{ Actor, ActorLogging, ActorRef, Props }
 import example.LobbyActor._
-import example.domain.{PLAYER1, PLAYER2, Room}
+import example.domain.{ PLAYER1, PLAYER2, Room }
 
 import scala.concurrent.duration._
 import scala.collection.mutable
 
-class LobbyActor(rooms:mutable.Set[Room]) extends Actor with ActorLogging {
+class LobbyActor(rooms: mutable.Set[Room]) extends Actor with ActorLogging {
 
   implicit val ec = context.system.dispatcher
 
@@ -36,8 +36,8 @@ class LobbyActor(rooms:mutable.Set[Room]) extends Actor with ActorLogging {
       rooms.add(room)
       log.info(s"Adding a new room roomId=$roomId")
       log.info("Not actually starting the room FSM")
-//      val roomFsm = context.actorOf(RoomActor.props(roomId))
-//      roomFsm ! START_GAME(PLAYER1, PLAYER2)
+    //      val roomFsm = context.actorOf(RoomActor.props(roomId))
+    //      roomFsm ! START_GAME(PLAYER1, PLAYER2)
   }
 
   def makeLobbyUpdate() = LobbyUpdate(

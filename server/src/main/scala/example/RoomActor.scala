@@ -2,12 +2,11 @@ package example
 
 import java.util.UUID
 
-import akka.actor.{FSM, Props}
+import akka.actor.{ FSM, Props }
 import akka.actor.FSM.Failure
 import com.typesafe.scalalogging.LazyLogging
 import example.domain._
 import RoomActor._
-
 
 sealed trait RoomState
 
@@ -39,7 +38,7 @@ class RoomActor(roomId: UUID) extends FSM[RoomState, Data] with LazyLogging {
   })
 
   when(WAITING_FOR_MOVE)({
-    case Event(move: MOVE, game@GameData(roomId, board, _, _, turn, None)) =>
+    case Event(move: MOVE, game @ GameData(roomId, board, _, _, turn, None)) =>
       if (move.player != turn)
         throw IllegalGameMove(s"received move for player${move.player} but turn=$turn !")
 
@@ -87,11 +86,11 @@ object RoomActor {
     ((0, 2), (1, 1), (2, 0)) // 357
   )
 
-  def hasTicTacToe(board: Board, player: Player): Boolean = winningCombos.exists { case ((x1, y1), (x2, y2), (x3, y3)) =>
-    board.at(x1, y1) == player.marker &&
-    board.at(x2, y2) == player.marker &&
-    board.at(x3, y3) == player.marker
+  def hasTicTacToe(board: Board, player: Player): Boolean = winningCombos.exists {
+    case ((x1, y1), (x2, y2), (x3, y3)) =>
+      board.at(x1, y1) == player.marker &&
+        board.at(x2, y2) == player.marker &&
+        board.at(x3, y3) == player.marker
   }
-
 
 }

@@ -1,16 +1,15 @@
 package util
 
-
-import akka.actor.{Actor, ActorLogging, OneForOneStrategy, Props, SupervisorStrategy}
+import akka.actor.{ Actor, ActorLogging, OneForOneStrategy, Props, SupervisorStrategy }
 
 import scala.concurrent.duration._
 
 /**
-  * This supervisor will supervise a single child actor using the provided SupervisorStrategy
-  * All incoming messages will be forwarded to the child actor.
-  *
-  * Created by PM on 17/03/2017.
-  */
+ * This supervisor will supervise a single child actor using the provided SupervisorStrategy
+ * All incoming messages will be forwarded to the child actor.
+ *
+ * Created by PM on 17/03/2017.
+ */
 class SimpleSupervisor(childProps: Props, childName: String, strategy: SupervisorStrategy.Directive) extends Actor with ActorLogging {
 
   val child = context.actorOf(childProps, childName)

@@ -4,7 +4,7 @@ package object domain {
 
   case class Room(roomId: String, name: String)
 
-  case class BoardCoordinate(x: Int, y: Int){
+  case class BoardCoordinate(x: Int, y: Int) {
     require(0 <= x && x <= 3 && 0 <= y && y <= 3, s"Invalid coordinates for board must be between 0 and 3 include, x=$x y=$y")
   }
 
@@ -58,11 +58,8 @@ package object domain {
     override def toString: String = "PLAYER2"
   }
 
-
   case class IllegalBoardMove(msg: String) extends RuntimeException(msg)
   case class IllegalGameMove(msg: String) extends RuntimeException(msg)
-
-
 
 }
 
