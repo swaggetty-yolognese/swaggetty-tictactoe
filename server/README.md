@@ -1,9 +1,9 @@
-#Tic-Tac-Swag
+# Tic-Tac-Swag
 
-###Prerequisites
+### Prerequisites
 Download and install sbt from your package manager or scala-sbt.org/download.html
 
-###Running
+### Running
 From withing the server folder launch sbt to run the project:
 
 `sbt run` to run the application
