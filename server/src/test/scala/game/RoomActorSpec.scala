@@ -1,7 +1,7 @@
-package example
+package game
 
-import example.domain._
-import example.RoomActor._
+import game.domain._
+import game.RoomActor._
 import org.specs2.mutable.Specification
 
 class RoomActorSpec extends Specification {

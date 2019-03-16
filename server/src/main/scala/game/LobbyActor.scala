@@ -1,11 +1,11 @@
-package example
+package game
 
 import java.time.LocalDateTime
 import java.util.UUID
 
 import akka.actor.{ Actor, ActorLogging, ActorRef, Props }
-import example.LobbyActor._
-import example.domain.{ PLAYER1, PLAYER2, Room }
+import game.LobbyActor._
+import game.domain.{ PLAYER1, PLAYER2, Room }
 
 import scala.concurrent.duration._
 import scala.collection.mutable

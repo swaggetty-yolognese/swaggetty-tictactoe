@@ -11,7 +11,7 @@ lazy val root = (project in file(".")).
       organization    := "swaggetty-yolognese",
       scalaVersion    := "2.12.4",
       version         := "0.0.1",
-      mainClass in Compile := Some("example.AppEntryPoint"),
+      mainClass in Compile := Some("swaggetty.AppEntryPoint"),
       ScalariformKeys.preferences := scalariformPref.value
     )),
     name := "swaggetty-tictactoe",

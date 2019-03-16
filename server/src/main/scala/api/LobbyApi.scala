@@ -9,7 +9,7 @@ import akka.http.scaladsl.model.ws.{ BinaryMessage, Message, TextMessage }
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.{ Directive1, Route }
 import akka.stream.scaladsl.{ BroadcastHub, Flow, Keep, Sink, Source }
-import example.LobbyActor.{ AddRoom, EchoWs, LobbyUpdate }
+import game.LobbyActor.{ AddRoom, EchoWs, LobbyUpdate }
 import util.JsonSupport
 import akka.pattern._
 import akka.stream.{ ActorMaterializer, OverflowStrategy }

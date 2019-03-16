@@ -1,12 +1,12 @@
-package example
+package game
 
 import java.util.UUID
 
-import akka.actor.{ FSM, Props }
 import akka.actor.FSM.Failure
+import akka.actor.{FSM, Props}
 import com.typesafe.scalalogging.LazyLogging
-import example.domain._
-import RoomActor._
+import game.RoomActor._
+import game.domain._
 
 sealed trait RoomState
 
