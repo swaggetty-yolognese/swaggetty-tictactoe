@@ -8,22 +8,19 @@ import com.typesafe.scalalogging.LazyLogging
 import game.RoomActor._
 import game.domain._
 
+// formatter: off
 sealed trait RoomState
-
 case object WAITING_FOR_INIT extends RoomState
-
 case object WAITING_FOR_MOVE extends RoomState
 
 sealed trait RoomEvent
-
 case class START_GAME(player1: Player, player2: Player) extends RoomEvent // used to start a new game
 case class MOVE(player: Player, coordinate: BoardCoordinate) extends RoomEvent
 
 sealed trait Data
-
 case object Empty extends Data
-
 case class GameData(roomId: UUID, board: Board, player1: Player, player2: Player, turn: Player, winner: Option[Player]) extends Data
+// formatter: on
 
 class RoomActor(roomId: UUID) extends FSM[RoomState, Data] with LazyLogging {
 

@@ -3,9 +3,9 @@ package game
 import java.time.LocalDateTime
 import java.util.UUID
 
-import akka.actor.{ Actor, ActorLogging, ActorRef, Props }
+import akka.actor.{Actor, ActorLogging, ActorRef, Props}
 import game.LobbyActor._
-import game.domain.{ PLAYER1, PLAYER2, Room }
+import game.domain.{PLAYER1, Room}
 
 import scala.concurrent.duration._
 import scala.collection.mutable
@@ -30,11 +30,12 @@ class LobbyActor(rooms: mutable.Set[Room]) extends Actor with ActorLogging {
       log.debug(s"broadcasting update")
       context.system.eventStream.publish(makeLobbyUpdate())
 
-    case AddRoom(p1, p2) =>
+    // create a room with one player
+    case CreateRoom(p1) =>
       val roomId = UUID.randomUUID()
-      val room = Room(roomId.toString, "room-name-here")
+      val room = Room(roomId.toString, player1 = Some(PLAYER1))
       rooms.add(room)
-      log.info(s"Adding a new room roomId=$roomId")
+      log.info(s"Creating a new room roomId=$roomId")
       log.info("Not actually starting the room FSM")
     //      val roomFsm = context.actorOf(RoomActor.props(roomId))
     //      roomFsm ! START_GAME(PLAYER1, PLAYER2)
@@ -51,7 +52,7 @@ object LobbyActor {
   def props() = Props(new LobbyActor(mutable.Set.empty[Room]))
 
   sealed trait LobbyMsg
-  case class AddRoom(player1: String, player2: String)
+  case class CreateRoom(player1: String)
   case class LobbyUpdate(date: LocalDateTime, rooms: Set[Room])
   case class EchoWs(msg: String)
   case object BROADCAST_LOBBY_STATE extends LobbyMsg

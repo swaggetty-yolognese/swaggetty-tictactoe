@@ -7,7 +7,7 @@ import akka.util.Timeout
 import api.LobbyApi
 import com.typesafe.scalalogging.LazyLogging
 import game.LobbyActor
-import game.LobbyActor.AddRoom
+import game.LobbyActor.CreateRoom
 import util.SimpleSupervisor
 
 import scala.concurrent.ExecutionContext
@@ -31,7 +31,7 @@ object AppEntryPoint extends App with LobbyApi with LazyLogging {
     logger.info(s"bound to $bind")
   }
 
-  lobbyActor ! AddRoom("Andrea", "Gianni")
+  lobbyActor ! CreateRoom("Andrea")
   //
   //
   //  roomActor ! START_GAME(PLAYER1, PLAYER2)

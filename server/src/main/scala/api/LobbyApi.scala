@@ -9,7 +9,7 @@ import akka.http.scaladsl.model.ws.{ BinaryMessage, Message, TextMessage }
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.{ Directive1, Route }
 import akka.stream.scaladsl.{ BroadcastHub, Flow, Keep, Sink, Source }
-import game.LobbyActor.{ AddRoom, EchoWs, LobbyUpdate }
+import game.LobbyActor.{ CreateRoom, EchoWs, LobbyUpdate }
 import util.JsonSupport
 import akka.pattern._
 import akka.stream.{ ActorMaterializer, OverflowStrategy }
@@ -59,7 +59,7 @@ trait LobbyApi extends JsonSupport with LazyLogging {
 
         // SOCKET -> INTERNAL
         case TextMessage.Strict(msg) =>
-          Try(serialization.read[AddRoom](msg)).foreach(ar => lobbyActor.tell(ar, self))
+          Try(serialization.read[CreateRoom](msg)).foreach(ar => lobbyActor.tell(ar, self))
           Try(serialization.read[EchoWs](msg)).foreach(echo => lobbyActor.tell(echo, self))
       }
     }))

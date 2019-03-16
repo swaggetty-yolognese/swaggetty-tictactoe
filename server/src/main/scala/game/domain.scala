@@ -2,7 +2,11 @@ package game
 
 package object domain {
 
-  case class Room(roomId: String, name: String)
+  case class Room(
+                   roomId: String,
+                   player1: Option[Player] = None,
+                   player2: Option[Player] = None
+                 )
 
   case class BoardCoordinate(x: Int, y: Int) {
     require(0 <= x && x <= 3 && 0 <= y && y <= 3, s"Invalid coordinates for board must be between 0 and 3 include, x=$x y=$y")
@@ -22,7 +26,9 @@ package object domain {
     }
 
     override def toString: String = {
-      s" \n${grid(0)(0)}|${grid(0)(1)}|${grid(0)(2)} \n${grid(1)(0)}|${grid(1)(1)}|${grid(1)(2)} \n${grid(2)(0)}|${grid(2)(1)}|${grid(2)(2)}\n"
+      s"\n${grid(0)(0)}|${grid(0)(1)}|${grid(0)(2)} " +
+      s"\n${grid(1)(0)}|${grid(1)(1)}|${grid(1)(2)} " +
+      s"\n${grid(2)(0)}|${grid(2)(1)}|${grid(2)(2)}\n"
     }
   }
 
@@ -43,13 +49,13 @@ package object domain {
     def opponent: Player
 
   }
+
   object PLAYER1 extends Player {
     override def marker = 1
-
     override def opponent: Player = PLAYER2
-
     override def toString: String = s"PLAYER1"
   }
+
   object PLAYER2 extends Player {
     override def marker = -1
 
