@@ -57,7 +57,7 @@ class RoomActor(roomId: UUID) extends FSM[RoomState, Data] with LazyLogging {
 
       //send info back to the players
       //sender() ! board1
-      stay using game.copy(board = board1, turn = turn.opponent)
+      stay using game.copy(board = board1, turn = opponentForMove(move, game))
   })
 
   whenUnhandled({
@@ -67,6 +67,15 @@ class RoomActor(roomId: UUID) extends FSM[RoomState, Data] with LazyLogging {
 }
 
 object RoomActor {
+
+
+  def opponentForMove(move: MOVE, gameData: GameData) = {
+      move.player.side match {
+        case PLAYER1 => gameData.player2
+        case PLAYER2 => gameData.player1
+      }
+  }
+
 
   def props(roomId: UUID) = Props(new RoomActor(roomId))
 

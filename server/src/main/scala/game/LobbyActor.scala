@@ -5,7 +5,7 @@ import java.util.UUID
 
 import akka.actor.{Actor, ActorLogging, ActorRef, Props}
 import game.LobbyActor._
-import game.domain.{PLAYER1, Room}
+import game.domain.{Player1, Room}
 
 import scala.concurrent.duration._
 import scala.collection.mutable
@@ -33,7 +33,7 @@ class LobbyActor(rooms: mutable.Set[Room]) extends Actor with ActorLogging {
     // create a room with one player
     case CreateRoom(p1) =>
       val roomId = UUID.randomUUID()
-      val room = Room(roomId.toString, player1 = Some(PLAYER1))
+      val room = Room(roomId.toString, player1 = Some(Player1(p1)))
       rooms.add(room)
       log.info(s"Creating a new room roomId=$roomId")
       log.info("Not actually starting the room FSM")
