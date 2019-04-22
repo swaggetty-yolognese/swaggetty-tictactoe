@@ -1,20 +1,15 @@
 package api
 
-import java.util.UUID
-
 import akka.NotUsed
 import akka.actor.{ Actor, ActorRef, ActorSystem, Props }
-import akka.http.scaladsl.model.headers.HttpCookie
 import akka.http.scaladsl.model.ws.{ BinaryMessage, Message, TextMessage }
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.{ Directive1, Route }
 import akka.stream.scaladsl.{ BroadcastHub, Flow, Keep, Sink, Source }
 import game.LobbyActor.{ CreateRoom, EchoWs, LobbyUpdate }
 import util.JsonSupport
-import akka.pattern._
 import akka.stream.{ ActorMaterializer, OverflowStrategy }
 import com.typesafe.scalalogging.LazyLogging
-
 import scala.util.Try
 
 trait LobbyApi extends JsonSupport with LazyLogging {
@@ -24,26 +19,17 @@ trait LobbyApi extends JsonSupport with LazyLogging {
 
   implicit val lobbyActor: ActorRef
 
-  val SESSION_COOKIE = "session-cookie"
-
   lazy val lobbyRoute: Route = {
     (get & path("lobby" / "ws")) {
-      handleWebSocketMessages(makeSocketHandler)
+      handleWebSocketMessages(lobbySocket)
     }
   }
 
-  def withSessionCookie(name: String): Directive1[String] = optionalCookie(name).tflatMap {
-    case Tuple1(Some(cookiePair)) => provide(cookiePair.value)
-    case Tuple1(None) =>
-      val newSessionId = UUID.randomUUID().toString
-      setCookie(HttpCookie(name, newSessionId)).tflatMap { _ =>
-        provide(newSessionId)
-      }
-  }
+  lazy val lobbySocket: Flow[Message, TextMessage.Strict, NotUsed] = {
 
-  lazy val makeSocketHandler: Flow[Message, TextMessage.Strict, NotUsed] = {
-
-    val (flowInput, flowOutput) = Source.queue[String](10, OverflowStrategy.dropTail).toMat(BroadcastHub.sink[String])(Keep.both).run()
+    val (flowInput, flowOutput) = Source.queue[String](10, OverflowStrategy.dropTail)
+      .toMat(BroadcastHub.sink[String])(Keep.both)
+      .run()
 
     // register an actor that feeds the queue when a lobbyActor update is received
     val socketActor = system.actorOf(Props(new Actor {
@@ -54,13 +40,13 @@ trait LobbyApi extends JsonSupport with LazyLogging {
 
       def receive: Receive = {
         // INTERNAL -> SOCKET
-        case u @ LobbyUpdate(date, rooms) => flowInput.offer(serialization.write(u))
+        case u @ LobbyUpdate(date, rooms) => flowInput.offer(json.write(u))
         case EchoWs(msg)                  => flowInput.offer(msg)
 
         // SOCKET -> INTERNAL
         case TextMessage.Strict(msg) =>
-          Try(serialization.read[CreateRoom](msg)).foreach(ar => lobbyActor.tell(ar, self))
-          Try(serialization.read[EchoWs](msg)).foreach(echo => lobbyActor.tell(echo, self))
+          Try(json.read[CreateRoom](msg)).foreach(ar => lobbyActor.tell(ar, self))
+          Try(json.read[EchoWs](msg)).foreach(echo => lobbyActor.tell(echo, self))
       }
     }))
 

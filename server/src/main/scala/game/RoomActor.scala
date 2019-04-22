@@ -16,6 +16,7 @@ case object WAITING_FOR_MOVE extends RoomState
 sealed trait RoomEvent
 case class START_GAME(player1: Player, player2: Player) extends RoomEvent // used to start a new game
 case class MOVE(player: Player, coordinate: BoardCoordinate) extends RoomEvent
+case class BROADCAST_ROOM_STATE() extends RoomEvent
 
 sealed trait Data
 case object Empty extends Data
@@ -32,9 +33,15 @@ class RoomActor(roomId: UUID) extends FSM[RoomState, Data] with LazyLogging {
       val board = Board.emptyTicTacToeBoard()
       val startingPlayer = s.player1
       goto(WAITING_FOR_MOVE) using GameData(roomId, board, s.player1, s.player2, startingPlayer, winner = None)
+    case Event(b: BROADCAST_ROOM_STATE, g: GameData) =>
+      context.system.eventStream.publish(RoomUpdate(g.player1, g.player2, g.board, g.turn))
+      stay
   })
 
   when(WAITING_FOR_MOVE)({
+    case Event(b: BROADCAST_ROOM_STATE, g: GameData) =>
+      context.system.eventStream.publish(RoomUpdate(g.player1, g.player2, g.board, g.turn))
+      stay()
     case Event(move: MOVE, game @ GameData(roomId, board, _, _, turn, None)) =>
       if (move.player != turn)
         throw IllegalGameMove(s"received move for player${move.player} but turn=$turn !")
@@ -68,6 +75,7 @@ class RoomActor(roomId: UUID) extends FSM[RoomState, Data] with LazyLogging {
 
 object RoomActor {
 
+  case class RoomUpdate(player1: Player, player2: Player, board: Board, turn: Player)
 
   def opponentForMove(move: MOVE, gameData: GameData) = {
       move.player.side match {

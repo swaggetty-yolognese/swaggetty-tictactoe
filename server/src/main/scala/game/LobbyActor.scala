@@ -6,7 +6,6 @@ import java.util.UUID
 import akka.actor.{Actor, ActorLogging, ActorRef, Props}
 import game.LobbyActor._
 import game.domain.{Player1, Player2, Room}
-
 import scala.concurrent.duration._
 import scala.collection.mutable
 
@@ -55,8 +54,6 @@ class LobbyActor(openRooms: mutable.Set[Room], closedRooms: mutable.Set[Room]) e
 
       // remove the existing open room
       openRooms.remove(room)
-
-
   }
 
   def makeLobbyUpdate() = LobbyUpdate(
