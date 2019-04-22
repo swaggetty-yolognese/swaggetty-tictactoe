@@ -3,10 +3,17 @@ package game
 package object domain {
 
   case class Room(
-                   roomId: String,
-                   player1: Option[Player] = None,
-                   player2: Option[Player] = None
-                 )
+     roomId: String,
+     player1: Option[Player] = None,
+     player2: Option[Player] = None,
+     status: RoomStatusEnum.Value
+  )
+
+  object RoomStatusEnum extends Enumeration {
+    val WAITING = Value(1, "WAITING")
+    val ACTIVE = Value(2, "ACTIVE")
+    val TERMINATED = Value(3, "TERMINATED")
+  }
 
   case class BoardCoordinate(x: Int, y: Int) {
     require(0 <= x && x <= 3 && 0 <= y && y <= 3, s"Invalid coordinates for board must be between 0 and 3 include, x=$x y=$y")

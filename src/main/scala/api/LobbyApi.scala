@@ -1,15 +1,16 @@
 package api
 
 import akka.NotUsed
-import akka.actor.{ Actor, ActorRef, ActorSystem, Props }
-import akka.http.scaladsl.model.ws.{ BinaryMessage, Message, TextMessage }
+import akka.actor.{Actor, ActorRef, ActorSystem, Props}
+import akka.http.scaladsl.model.ws.{BinaryMessage, Message, TextMessage}
 import akka.http.scaladsl.server.Directives._
-import akka.http.scaladsl.server.{ Directive1, Route }
-import akka.stream.scaladsl.{ BroadcastHub, Flow, Keep, Sink, Source }
-import game.LobbyActor.{ CreateRoom, EchoWs, LobbyUpdate }
+import akka.http.scaladsl.server.{Directive1, Route}
+import akka.stream.scaladsl.{BroadcastHub, Flow, Keep, Sink, Source}
+import game.LobbyActor.{CreateRoom, EchoWs, JoinRoom, LobbyUpdate}
 import util.JsonSupport
-import akka.stream.{ ActorMaterializer, OverflowStrategy }
+import akka.stream.{ActorMaterializer, OverflowStrategy}
 import com.typesafe.scalalogging.LazyLogging
+
 import scala.util.Try
 
 trait LobbyApi extends JsonSupport with LazyLogging {
@@ -19,9 +20,14 @@ trait LobbyApi extends JsonSupport with LazyLogging {
 
   implicit val lobbyActor: ActorRef
 
-  lazy val lobbyRoute: Route = {
-    (get & path("lobby" / "ws")) {
+  lazy val lobbyRoute: Route = pathPrefix("lobby"){
+    (get & path("ws")) {
       handleWebSocketMessages(lobbySocket)
+    } ~
+    (post & path("join")) {
+      entity(as[JoinRoom]) { join =>
+        complete(s"JOIN=$join")
+      }
     }
   }
 

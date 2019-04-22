@@ -2,10 +2,10 @@ package game
 
 import java.time.LocalDateTime
 import java.util.UUID
-
 import akka.actor.{Actor, ActorLogging, ActorRef, Props}
 import game.LobbyActor._
-import game.domain.{Player1, Player2, Room}
+import game.domain.{Player1, Player2, Room }
+import game.domain.RoomStatusEnum._
 import scala.concurrent.duration._
 import scala.collection.mutable
 
@@ -37,7 +37,7 @@ class LobbyActor(openRooms: mutable.Set[Room], closedRooms: mutable.Set[Room]) e
     // create a room with one player
     case CreateRoom(p1) =>
       val roomId = UUID.randomUUID()
-      val room = Room(roomId.toString, player1 = Some(Player1(p1)))
+      val room = Room(roomId.toString, player1 = Some(Player1(p1)), status = WAITING)
       openRooms.add(room)
       log.info(s"Creating a new room roomId=$roomId")
     //      val roomFsm = context.actorOf(RoomActor.props(roomId))
@@ -48,8 +48,9 @@ class LobbyActor(openRooms: mutable.Set[Room], closedRooms: mutable.Set[Room]) e
         throw new IllegalArgumentException(s"Room not found! roomId=$roomId")
       }
 
-      val room1 = room.copy(player2 = Some(Player2(player)))
+      val room1 = room.copy(player2 = Some(Player2(player)), status = ACTIVE)
 
+      // the room becomes "closed" as it is not possible to join it anymore
       closedRooms.add(room1)
 
       // remove the existing open room
