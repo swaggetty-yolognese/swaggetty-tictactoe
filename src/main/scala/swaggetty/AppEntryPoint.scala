@@ -34,11 +34,11 @@ object AppEntryPoint extends App with LobbyApi with LazyLogging {
   lobbyActor ! CreateRoom("Andrea")
   //
   //
-  //  roomActor ! START_GAME(PLAYER1, PLAYER2)
-  //  roomActor ! MOVE(PLAYER1, BoardCoordinate(0, 0))
-  //  roomActor ! MOVE(PLAYER2, BoardCoordinate(2, 0))
-  //  roomActor ! MOVE(PLAYER1, BoardCoordinate(0, 1))
-  //  roomActor ! MOVE(PLAYER2, BoardCoordinate(2, 1))
-  //  roomActor ! MOVE(PLAYER1, BoardCoordinate(0, 2))
+  //  roomActor ! START_GAME(PLAYER_SIDE_1, PLAYER_SIDE_2)
+  //  roomActor ! MOVE(PLAYER_SIDE_1, BoardCoordinate(0, 0))
+  //  roomActor ! MOVE(PLAYER_SIDE_2, BoardCoordinate(2, 0))
+  //  roomActor ! MOVE(PLAYER_SIDE_1, BoardCoordinate(0, 1))
+  //  roomActor ! MOVE(PLAYER_SIDE_2, BoardCoordinate(2, 1))
+  //  roomActor ! MOVE(PLAYER_SIDE_1, BoardCoordinate(0, 2))
 
 }

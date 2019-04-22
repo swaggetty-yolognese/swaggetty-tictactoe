@@ -52,19 +52,19 @@ package object domain {
   }
 
   sealed trait PlayerSide
-  case object PLAYER1 extends PlayerSide
-  case object PLAYER2 extends PlayerSide
+  case object PLAYER_SIDE_1 extends PlayerSide
+  case object PLAYER_SIDE_2 extends PlayerSide
 
   case class Player1(name: String) extends Player {
     override def marker = 1
-    override def side: PlayerSide = PLAYER1
-    override def toString: String = s"PLAYER1=${name.take(20)}"
+    override def side: PlayerSide = PLAYER_SIDE_1
+    override def toString: String = s"PLAYER_1=${name.take(20)}"
   }
 
   case class Player2(name: String) extends Player {
     override def marker = -1
-    override def side: PlayerSide = PLAYER2
-    override def toString: String = s"PLAYER2=${name.take(20)}"
+    override def side: PlayerSide = PLAYER_SIDE_2
+    override def toString: String = s"PLAYER_2=${name.take(20)}"
   }
 
   case class IllegalBoardMove(msg: String) extends RuntimeException(msg)

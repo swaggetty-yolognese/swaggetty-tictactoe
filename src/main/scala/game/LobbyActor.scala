@@ -41,7 +41,7 @@ class LobbyActor(openRooms: mutable.Set[Room], closedRooms: mutable.Set[Room]) e
       openRooms.add(room)
       log.info(s"Creating a new room roomId=$roomId")
     //      val roomFsm = context.actorOf(RoomActor.props(roomId))
-    //      roomFsm ! START_GAME(PLAYER1, PLAYER2)
+    //      roomFsm ! START_GAME(PLAYER_SIDE_1, PLAYER_SIDE_2)
 
     case JoinRoom(roomId, player) =>
       val room = openRooms.find(_.roomId == roomId).getOrElse {

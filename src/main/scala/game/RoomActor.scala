@@ -79,8 +79,8 @@ object RoomActor {
 
   def opponentForMove(move: MOVE, gameData: GameData) = {
       move.player.side match {
-        case PLAYER1 => gameData.player2
-        case PLAYER2 => gameData.player1
+        case PLAYER_SIDE_1 => gameData.player2
+        case PLAYER_SIDE_2 => gameData.player1
       }
   }
 
